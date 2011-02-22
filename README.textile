@@ -3,7 +3,9 @@
 | |  | |  | |  | |     | |__| | | |__| |       
 |_|  |_| _|_|_ |_|____ |_|  |_| |_|  \_\       </code></pre>
 
-A guide, by "Aron Pilhofer":http://github.com/pilhofer.
+A example Django app, by "Aron Pilhofer":http://github.com/pilhofer.
+
+h3. Instructions
 
 *Create your Django project*
 
@@ -204,7 +206,7 @@ from django.db.models import Sum</code></pre>
 </pre>
 
 *Download votinator.swf and put in in the "media" directory*
-<pre><code>http://github.com/downloads/palewire/ire2010/voteinator.swf</code></pre>
+<pre><code>https://github.com/palewire/nicar2011/blob/master/nicar2011/media/voteinator.swf</code></pre>
 
 *Extra credit... it votes up, but not down. how to fix?*
 
