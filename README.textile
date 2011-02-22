@@ -88,8 +88,7 @@ admin.site.register(Vote)</code></pre>
 
 First add this to settings.py
 
-<pre><code>
-import os
+<pre><code>import os
 settings_dir = os.path.dirname(__file__)
 STATIC_DOC_ROOT = os.path.join(settings_dir, 'media')
 TEMPLATE_DIRS = (
@@ -103,7 +102,6 @@ Then replace all of urls.py with the following
 from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
-
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
