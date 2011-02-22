@@ -2,23 +2,31 @@ h1. README
 
 A guide, by "Aron Pilhofer":http://github.com/pilhofer.
 
-*01. Create your Django project*
+*Create your Django project*
 
-<pre><code>django-admin.py startproject ire2010</code></pre>
+<pre><code>$ django-admin.py startproject nicar2011</code></pre>
 
-*02. Test it*
+*Start it up for the first time*
 
-<pre><code>python manage.py runserver</code></pre>
+<pre><code>$ cd nicar2011
+$ python manage.py runserver</code></pre>
 
-*03. After you configure, syncdb*
+*Set your database connection and syncdb*
 
-<pre><code>python manage.py syncdb</code></pre>
+In settings.py...
 
-*04. create an application, call it polls*
+<pre><code>DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'nicar2011.db'</code></pre>
 
-<pre><code>python manage.py startapp polls</code></pre>
+Then back on the shell...
 
-*05. define two models in models.py*
+<pre><code>$ python manage.py syncdb</code></pre>
+
+*Create an application, call it polls*
+
+<pre><code>$ python manage.py startapp polls</code></pre>
+
+*Define two models in models.py*
 
 <pre><code>class Project(models.Model):
     title = models.CharField(max_length=200)
@@ -30,75 +38,96 @@ class Vote(models.Model):
     choice = models.IntegerField()
     </code></pre>
 
-*06. add line to settings.py as an installed app*
+*Add line to settings.py as an installed app*
 
 <pre><code>'polls',</code></pre>
 
-*07. sync your db*
+*Sync your db again*
 
-<pre><code>python manage.py syncdb</code></pre>
+<pre><code>$ python manage.py syncdb</code></pre>
 
-*08. add a string representation of your object to the model project*
+*Add a string representation of your object to the model Project in models.py*
 
 <pre><code>def __unicode__(self):
     return self.title</code></pre>
 
-*09. add to settings.py as an installed app*
+*Add your app to settings.py in INSTALLED_APPS*
 
-<pre><code>django.contrib.admin</code></pre>
+<pre><code>'django.contrib.admin',</code></pre>
 
-*10. sync db*
+*Sync db to create admin tables*
 
-<pre><code>python manage.py syncdb</code></pre>
+<pre><code>$ python manage.py syncdb</code></pre>
 
-*11. enable admin. in urls.py, uncomment*
+*Enable admin. in urls.py by uncommenting the following*
 
 <pre><code>from django.contrib import admin
 admin.autodiscover()</code></pre>
 
-*...and...*
+...and...
 
 <pre><code>(r'^admin/', include(admin.site.urls)),</code></pre>
 
-*12. fire up the server, and log in*
+*Fire up the server, and log in at http://localhost:8000/admin/*
 
-<pre><code>python manage.py runserver</code></pre>
+<pre><code>$ python manage.py runserver</code></pre>
 
-*13. add your app to the admin. create a file called admin.py in your project (make joke about conventions), and add:*
+*Add your app to the admin. create a file called admin.py in your project (make joke about conventions), and add:*
 
 <pre><code>from polls.models import Project
 from django.contrib import admin
 
 admin.site.register(Project)</code></pre>
 
-*14. add vote to the admin.py file so we can see associations*
+*Add vote to the admin.py file so we can see associations*
 
 <pre><code>from polls.models import Vote
 admin.site.register(Vote)</code></pre>
 
-*15. Add the urls we need for the rest of our app urls.py*
+*Configure your templates and dump the urls for our app into urls.py*
 
-<pre><code>(r'^admin/', include(admin.site.urls)),
-(r'^polls/$', 'polls.views.index'),
-(r'^polls/(?P<poll_id>\d+)/$', 'polls.views.detail'),
-(r'^polls/(?P<poll_id>\d+)/vote/$', 'polls.views.vote'),
-(r'^polls/(?P<poll_id>\d+)/data.xml$', 'polls.views.data'),
-(r'^crossdomain.xml$', 'polls.views.crossdomain'),
-(r'^local-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT }),</code></pre>
+First add this to settings.py
 
-*16. create a view. in views.py*
+<pre><code>
+import os
+settings_dir = os.path.dirname(__file__)
+STATIC_DOC_ROOT = os.path.join(settings_dir, 'media')
+TEMPLATE_DIRS = (
+    os.path.join(settings_dir, 'templates'),
+)
+</code></pre>
+
+Then replace all of urls.py with the following
+
+<pre><code>from django.conf.urls.defaults import *
+from django.conf import settings
+from django.contrib import admin
+admin.autodiscover()
+
+
+urlpatterns = patterns('',
+    (r'^admin/', include(admin.site.urls)),
+    (r'^polls/$', 'polls.views.index'),
+    (r'^polls/(?P<poll_id>\d+)/$', 'polls.views.detail'),
+    (r'^polls/(?P<poll_id>\d+)/vote/$', 'polls.views.vote'),
+    (r'^polls/(?P<poll_id>\d+)/data.xml$', 'polls.views.data'),
+    (r'^crossdomain.xml$', 'polls.views.crossdomain'),
+    (r'^local-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DOC_ROOT }),
+)</code></pre>
+
+*Create a view. in views.py*
 
 <pre><code>from django.http import HttpResponse
 
 def index(request):
     return HttpResponse("Hello, world. You're at the poll index.")</code></pre>
 
-*17 add a new method to your views.py, to see how django passes parameters*
+*Add a new method to your views.py, to see how django passes parameters*
 
 <pre><code>def detail(request, poll_id):
     return HttpResponse("You're looking at poll %s." % poll_id)</code></pre>
 
-*18. Add a bunch of stuff up at the top of views.py we will need later*
+*Add a bunch of stuff up at the top of views.py we will need later*
 
 <pre><code>from django.shortcuts import get_object_or_404, render_to_response
 from polls.models import Project, Vote
@@ -106,37 +135,32 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Sum</code></pre>
 
-*19. In sttings.py, let's set a path to our templates folder and add a setting for our static pages*
-
-<pre><code>TEMPLATE_DIRS =  "/Path/to/your/stuff"
-STATIC_DOC_ROOT = "/Path/to/your/stuff"</code></pre>
-
-*20. In our views.py, let's change our index view to pull some real data*
+*In our views.py, let's change our index view to pull some real data*
 
 <pre><code>def index(request):
     projects = Project.objects.all().order_by('-pub_date')[:5]
     return render_to_response('polls/index.html', {'projects': projects})</code></pre>
 
-*21. and create an index.html file*
+*Create an index.html file*
 
 <pre><code>{% if projects %}
     <ul>
     {% for project in projects %}
-        <li>{{ project.title }}</li>
+        <li><a href="/polls/{{ project.id }}/">{{ project.title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No projects are available.</p>
 {% endif %}</code></pre>
 
-*22. tweak our details method in views.py*
+*Tweak our details method in views.py*
 
 <pre><code>def detail(request, poll_id):
     p = Project.objects.get(pk=poll_id)
     total = p.vote_set.count()
     return render_to_response('polls/detail.html', {'project': p, 'vote_total': total, })</code></pre>
 
-*23. add a votes method to views.py*
+*Add a votes method to views.py*
 
 <pre><code>def vote(request, poll_id):
     p = get_object_or_404(Project, pk=poll_id)
@@ -144,14 +168,14 @@ STATIC_DOC_ROOT = "/Path/to/your/stuff"</code></pre>
     v.save()
     return HttpResponse(status=200)</code></pre>
 
-*24. add a data method to views.py*
+*Add a data method to views.py*
 
 <pre><code>def data(request, poll_id):
     p = Project.objects.get(pk=poll_id)
     total = p.vote_set.aggregate(Sum('choice'))
     return render_to_response('polls/data.xml', {'project': p, 'vote_total': total['choice__sum'], }, mimetype="text/xml")</code></pre>
 
-*25. create a data.xml file*
+*Create a data.xml file*
 
 <pre><code><?xml version="1.0" encoding="UTF-8"?>
 <results>
@@ -159,12 +183,12 @@ STATIC_DOC_ROOT = "/Path/to/your/stuff"</code></pre>
 <totals>{{ vote_total }}</totals>
 </results></code></pre>
 
-*26. create a crossdomain.xml method*
+*Create a crossdomain.xml method*
 
 <pre><code>def crossdomain(request):
     return HttpResponse('<?xml version=\"1.0\"?><cross-domain-policy><allow-access-from domain=\"*\" /></cross-domain-policy>', mimetype="text/xml")</code></pre>
 
-*27. create a detail.html template where it all comes together*
+*Create a detail.html template where it all comes together*
 <pre>&lt;div align=&quot;center&quot; class=&quot;left&quot;&gt;
     &lt;object type=&quot;application/x-shockwave-flash&quot; data=&quot;/local-media/voteinator.swf&quot; width=&quot;592&quot; height=&quot;333&quot;&gt;
         &lt;param name=&quot;movie&quot; value=&quot;/local-media/voteinator.swf&quot;/&gt;
@@ -178,10 +202,10 @@ STATIC_DOC_ROOT = "/Path/to/your/stuff"</code></pre>
 &lt;/div&gt;
 </pre>
 
-*28. Download votinator.swf and put in in the "media" directory*
+*Download votinator.swf and put in in the "media" directory*
 <pre><code>http://github.com/downloads/palewire/ire2010/voteinator.swf</code></pre>
 
-*29. extra credit... it votes up, but not down. how to fix?*
+*Extra credit... it votes up, but not down. how to fix?*
 
 <pre><code>def vote(request, poll_id):
     p = get_object_or_404(Project, pk=poll_id)
@@ -192,21 +216,4 @@ STATIC_DOC_ROOT = "/Path/to/your/stuff"</code></pre>
     v = p.vote_set.create(choice = value)
     v.save()
     return HttpResponse(status=200)</code></pre>
-
-
-*30. create a test.py script*
-
-<pre><code>import sys, urllib2, urllib
-
-url = 'http://localhost:8000/polls/1/vote/'
-
-recommend = "1"
-data = urllib.urlencode([('data', recommend)])
-req = urllib2.Request(url)
-fd = urllib2.urlopen(req, data)
-while 1:
-    data = fd.read(1024)
-    if not len(data):
-        break
-    sys.stdout.write(data)</code></pre>
 
