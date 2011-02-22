@@ -1,6 +1,4 @@
-<pre><code>
-                                                                                                 
-8b           d8                    88                                                            
+<pre><code>8b           d8                    88                                                            
 `8b         d8'             ,d     ""                             ,d                             
  `8b       d8'              88                                    88                             
   `8b     d8'  ,adPPYba,  MM88MMM  88  8b,dPPYba,   ,adPPYYba,  MM88MMM  ,adPPYba,   8b,dPPYba,  
