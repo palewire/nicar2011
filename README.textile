@@ -1,4 +1,14 @@
-h1. README
+<pre><code>
+                                                                                                 
+8b           d8                    88                                                            
+`8b         d8'             ,d     ""                             ,d                             
+ `8b       d8'              88                                    88                             
+  `8b     d8'  ,adPPYba,  MM88MMM  88  8b,dPPYba,   ,adPPYYba,  MM88MMM  ,adPPYba,   8b,dPPYba,  
+   `8b   d8'  a8"     "8a   88     88  88P'   `"8a  ""     `Y8    88    a8"     "8a  88P'   "Y8  
+    `8b d8'   8b       d8   88     88  88       88  ,adPPPPP88    88    8b       d8  88          
+     `888'    "8a,   ,a8"   88,    88  88       88  88,    ,88    88,   "8a,   ,a8"  88          
+      `8'      `"YbbdP"'    "Y888  88  88       88  `"8bbdP"Y8    "Y888  `"YbbdP"'   88          
+                                                                                                 </code></pre>
 
 A guide, by "Aron Pilhofer":http://github.com/pilhofer.
 
